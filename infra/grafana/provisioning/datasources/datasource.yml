@@ -1,0 +1,17 @@
+# Auto-provisioned Prometheus datasource for Grafana.
+# The fixed `uid` (PROMETHEUS) is referenced by the dashboard JSON so the
+# dashboard binds to this datasource on first load with no manual setup.
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: PROMETHEUS
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: 15s
+      httpMethod: POST

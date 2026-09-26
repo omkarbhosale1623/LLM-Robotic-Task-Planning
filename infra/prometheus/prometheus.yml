@@ -1,0 +1,31 @@
+# Prometheus scrape configuration for the LLM Robotic Task-Planning Agent.
+#
+# Targets use Docker Compose service names, so this file works unchanged whether
+# it is mounted by the root docker-compose.yml or by
+# infra/docker-compose.monitoring.yml (both put backend + prometheus on the same
+# Docker network).
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    project: llm-robotic-task-planning
+
+rule_files:
+  - /etc/prometheus/alerts.yml
+
+scrape_configs:
+  # The FastAPI backend exposes Prometheus metrics at /metrics (default + the
+  # planner domain metrics: plan_requests_total, plan_actions,
+  # benchmark_success_rate).
+  - job_name: backend
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["backend:8000"]
+        labels:
+          service: planner-backend
+
+  # Prometheus self-monitoring.
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

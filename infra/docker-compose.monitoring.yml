@@ -1,0 +1,67 @@
+# Standalone monitoring stack (Prometheus + Grafana) for the LLM Robotic
+# Task-Planning Agent.
+#
+# Use this to monitor an ALREADY-RUNNING backend without bringing up the full
+# application stack. The root ./docker-compose.yml integrates the same two
+# services for a single-command "up"; this file is the detached variant.
+#
+#   # 1. Start the app stack (creates the `planner-net` network):
+#   docker compose up -d backend frontend
+#   # 2. Start monitoring against it:
+#   docker compose -f infra/docker-compose.monitoring.yml up -d
+#
+# Both stacks share the external `planner-net` network so Prometheus can reach
+# the backend by its compose service name (`backend:8000`).
+#
+# Ports: Prometheus 9090, Grafana 3001.
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    container_name: llm-robot-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - planner-net
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    container_name: llm-robot-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      # Demo-friendly: anonymous viewer access + a known admin password.
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_SECURITY_ADMIN_PASSWORD: "admin"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - planner-net
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  # Created by the root docker-compose.yml when the app stack is started. We
+  # attach to it as an external network so this monitoring stack can scrape the
+  # backend container directly.
+  planner-net:
+    external: true
+    name: 02-llm-robotic-task-planning_planner-net

@@ -1,0 +1,27 @@
+[project]
+name = "llm-robotic-task-planning"
+version = "1.0.0"
+description = "LLM-powered robotic task-planning agent (FastAPI backend)"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+    "B008",  # FastAPI uses Depends() in argument defaults by design.
+    "E501",  # Line length handled by the formatter; long strings are fine.
+    "UP042", # `str, Enum` is intentional for explicit JSON-value serialisation.
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+asyncio_mode = "auto"
+filterwarnings = ["ignore::DeprecationWarning"]

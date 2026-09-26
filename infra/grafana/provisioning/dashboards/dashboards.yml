@@ -1,0 +1,16 @@
+# Dashboard provider: load every JSON dashboard found under
+# /var/lib/grafana/dashboards (mounted from infra/grafana/dashboards) at startup.
+
+apiVersion: 1
+
+providers:
+  - name: llm-planner-dashboards
+    orgId: 1
+    folder: "LLM Planner"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false

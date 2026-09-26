@@ -1,0 +1,42 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+*.log
+
+# ---- Node / Next ----
+node_modules/
+.next/
+out/
+.turbo/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---- Env ----
+.env
+.env.local
+.env.*.local
+*.env
+
+# ---- Models / data / artifacts ----
+models/
+*.pt
+*.bin
+*.onnx
+*.safetensors
+data/
+*.ckpt
+
+# ---- Editors / OS ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

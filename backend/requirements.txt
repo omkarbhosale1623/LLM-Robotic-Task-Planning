@@ -1,0 +1,36 @@
+# Core runtime — pinned. The app boots and the full test suite passes with ONLY
+# these dependencies (no GPU, no LLM key, no torch/transformers, no database).
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+websockets==14.1
+
+# Auth: Supabase JWT is verified with the Python standard library (hmac/hashlib),
+# so NO extra JWT dependency is required — the app works even where pyjwt is absent.
+
+# Observability — Prometheus metrics. Adds default HTTP metrics and a guarded
+# /metrics endpoint (see app/main.py); the app degrades gracefully if absent.
+prometheus-fastapi-instrumentator==7.0.0
+
+# --- Real-LLM planner (prod) -------------------------------------------------
+# Mistral is the DEFAULT backend. The official SDK is preferred; if it is absent
+# the planner falls back to a direct REST call via httpx. Both are import-guarded
+# so the heuristic planner still runs with neither installed and no key.
+mistralai==1.2.5
+httpx==0.28.1
+# Alternative backend (selectable via LLM_BACKEND=anthropic):
+anthropic==0.69.0
+
+# --- Persistence (prod; import-guarded) --------------------------------------
+# Supabase Postgres via SQLAlchemy(async) + asyncpg. Loaded ONLY when DATABASE_URL
+# is set AND these import successfully (see app/db/sql_repo.py); otherwise the app
+# uses the in-memory repository. NEVER imported on the offline boot/test path.
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+
+# --- Plan-memory embeddings (prod; optional / import-guarded) ----------------
+# sentence-transformers gives semantic embeddings for pgvector few-shot retrieval.
+# When absent, a deterministic stdlib hashing embedder is used instead (no GPU,
+# no download, fully offline). torch is pulled in transitively by this package.
+sentence-transformers==3.3.1
