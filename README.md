@@ -79,7 +79,7 @@ flowchart LR
         end
     end
 
-    LLM["Mistral (default) /\nAnthropic Claude"]
+    LLM["Mistral (default) /\nOpen AI"]
 
     Console -->|plan / plan-and-run| REST
     Bench -->|GET /benchmark| REST
@@ -128,7 +128,7 @@ ordered plan ──► validate against cloned world ──► execute step-by-s
 | ----------- | ----------------------------------------------------------------------- |
 | Backend     | Python 3.11, FastAPI, pydantic v2 / pydantic-settings, uvicorn, websockets |
 | Domain      | Custom STRIPS-like world model, heuristic NL parser, plan validator     |
-| Real LLM    | Mistral (`mistral-large-latest`, JSON output) by default; Anthropic Claude (`claude-opus-4-8`) alternative |
+| Real LLM    | Mistral (`mistral-large-latest`, JSON output) by default; OpenAI (`gpt-5.5`) alternative |
 | Auth        | Supabase JWT (stdlib HS256 verification — no `pyjwt`)                    |
 | Persistence | Supabase Postgres via SQLAlchemy(async)+asyncpg + pgvector (import-guarded; in-memory fallback) |
 | Frontend    | Next.js 14 (App Router), TypeScript strict, TailwindCSS, @tanstack/react-query, recharts, lucide-react |
