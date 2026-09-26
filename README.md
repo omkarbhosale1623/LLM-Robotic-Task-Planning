@@ -39,8 +39,8 @@ persist to **Supabase Postgres** when configured.
   ungrounded/illegal plans.
 - **Real LLM planner** that emits structured JSON actions, validated against the
   same primitive schema. **Mistral** (`mistral-large-latest`, `response_format=
-  json_object`) is the default backend; **Anthropic Claude** (`claude-opus-4-8`,
-  adaptive thinking + JSON-schema output) is selectable via `LLM_BACKEND=anthropic`.
+  json_object`) is the default backend; **Open AI API Key** (`GPT-5.5`,
+  adaptive thinking + JSON-schema output) is selectable via `LLM_BACKEND=openai`.
 - **Always-enforced Supabase JWT auth** (stdlib HS256 verification — no `pyjwt`),
   **per-user/per-session isolation** (`SessionRegistry`), and **Supabase Postgres
   persistence** (sessions, runs, **pgvector plan memory** for few-shot retrieval),
@@ -416,12 +416,12 @@ when installed; otherwise the planner falls back to a direct REST call via
 the world**; on any error/invalid output it transparently falls back to the
 heuristic planner, and the response/UI says so truthfully.
 
-**Use the Anthropic (Claude) backend instead:**
+**Use the Open AI API backend instead:**
 
 ```bash
-export LLM_BACKEND=anthropic
-export ANTHROPIC_API_KEY=sk-ant-...
-export ANTHROPIC_MODEL=claude-opus-4-8   # default; adaptive thinking + JSON-schema output
+export LLM_BACKEND=openai
+export ANTHROPIC_API_KEY=sk-...-...
+export OPENAI_MODEL=gpt-5.5   # default; adaptive thinking + JSON-schema output
 ```
 
 The default **planner mode** is `llm` when a provider key is present, else
