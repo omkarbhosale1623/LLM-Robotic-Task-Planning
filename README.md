@@ -7,8 +7,7 @@ simulated tabletop world, animated live in the browser.
 
 The planner has two interchangeable backends: an **always-available deterministic
 heuristic/grammar parser** (no GPU, no model, no API key) and a **real LLM-backed
-planner** — **Mistral by default** (`mistral-large-latest`), with **Anthropic
-Claude** selectable as an alternative. The LLM planner uses structured JSON output,
+planner** — **Mistral by default** (`mistral-large-latest`), with **Open AI** selectable as an alternative. The LLM planner uses structured JSON output,
 validates the model's action list against the primitive catalog, and injects
 similar prior plans (pgvector few-shot memory) as context. The system degrades
 gracefully: if the LLM is unavailable or returns an invalid plan, it silently
